@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人员拼音搜索表</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .search-container {
+            margin: 20px 0;
+        }
+        input {
+            padding: 12px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 14px;
+            }
+            .search-container {
+                margin: 10px 0;
+            }
+        }
+        .file-input-container {
+            margin: 20px 0;
+        }
+        .button {
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .file-input {
+            display: none;
+        }
+        .status-message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .button-danger {
+            background-color: #dc3545;
+            margin-left: 10px;
+        }
+        .button-danger:hover {
+            background-color: #c82333;
+        }
+        tbody tr {
+            cursor: pointer;
+        }
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="file-input-container">
+        <button class="button" onclick="document.getElementById('csvFile').click()">导入 CSV 文件</button>
+        <input type="file" id="csvFile" class="file-input" accept=".csv">
+        <button class="button button-danger" id="clearButton">清空数据</button>
+    </div>
+    <div id="statusMessage"></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="输入拼音或汉字搜索...">
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>姓名</th>
+                <th>部门</th>
+                <th>职位</th>
+            </tr>
+        </thead>
+        <tbody id="peopleList">
+        </tbody>
+    </table>
+
+    <script src="https://unpkg.com/pinyin-pro@3.18.2/dist/index.js"></script>
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
