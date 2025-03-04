@@ -93,13 +93,73 @@
         tbody tr:hover {
             background-color: #f5f5f5;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .hint {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        #csvEditor {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .modal-buttons {
+            text-align: right;
+        }
+        .button-cancel {
+            background-color: #6c757d;
+            margin-left: 10px;
+        }
+        .button-cancel:hover {
+            background-color: #5a6268;
+        }
+        @media screen and (max-width: 600px) {
+            .modal-content {
+                margin: 10% auto;
+                width: 90%;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="file-input-container">
-        <button class="button" onclick="document.getElementById('csvFile').click()">导入 CSV 文件</button>
-        <input type="file" id="csvFile" class="file-input" accept=".csv">
+        <button class="button" id="editButton">编辑数据</button>
         <button class="button button-danger" id="clearButton">清空数据</button>
+    </div>
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>编辑数据表</h3>
+            <p class="hint">请按照 "姓名,部门,职位" 格式编辑，每行一条数据</p>
+            <textarea id="csvEditor" rows="10" placeholder="张三,技术部,工程师&#10;李四,市场部,经理"></textarea>
+            <div class="modal-buttons">
+                <button class="button" id="saveButton">保存</button>
+                <button class="button button-cancel" id="cancelButton">取消</button>
+            </div>
+        </div>
     </div>
     <div id="statusMessage"></div>
     <div class="search-container">
