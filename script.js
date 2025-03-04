@@ -51,43 +51,56 @@ async function loadStoredPeople() {
     }
 }
 
-// 处理 CSV 文件导入
-document.getElementById('csvFile').addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+// 添加编辑框相关代码
+const modal = document.getElementById('editModal');
+const editButton = document.getElementById('editButton');
+const saveButton = document.getElementById('saveButton');
+const cancelButton = document.getElementById('cancelButton');
+const csvEditor = document.getElementById('csvEditor');
 
+// 打开编辑框
+editButton.addEventListener('click', () => {
+    // 将现有数据加载到编辑框
+    const csvContent = people.map(p => 
+        `${p.name},${p.department},${p.position}`
+    ).join('\n');
+    csvEditor.value = csvContent;
+    modal.style.display = 'block';
+});
+
+// 保存编辑内容
+saveButton.addEventListener('click', async () => {
     try {
-        // 使用 FileReader 来正确处理中文编码
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            try {
-                const text = event.target.result;
-                const rows = text.split('\n');
-                const newPeople = rows
-                    .slice(1) // 跳过标题行
-                    .filter(row => row.trim()) // 过滤空行
-                    .map(row => {
-                        const [name, department, position] = row.split(',').map(cell => cell.trim());
-                        return { name, department, position };
-                    });
+        const text = csvEditor.value;
+        const rows = text.split('\n');
+        const newPeople = rows
+            .filter(row => row.trim()) // 过滤空行
+            .map(row => {
+                const [name, department, position] = row.split(',').map(cell => cell.trim());
+                return { name, department, position };
+            });
 
-                // 保存到数据库
-                await db.addPeople(newPeople);
-                people = newPeople;
-                renderPeople(people);
-                showStatus('数据导入成功！', 'success');
-            } catch (error) {
-                showStatus('导入失败：' + error.message, 'error');
-            }
-        };
-        // 以 UTF-8 编码读取文件
-        reader.readAsText(file, 'UTF-8');
+        // 保存到数据库
+        await db.addPeople(newPeople);
+        people = newPeople;
+        renderPeople(people);
+        showStatus('数据保存成功！', 'success');
+        modal.style.display = 'none';
     } catch (error) {
-        showStatus('导入失败：' + error.message, 'error');
+        showStatus('保存失败：' + error.message, 'error');
     }
-    
-    // 清除文件输入，允许重复导入相同文件
-    e.target.value = '';
+});
+
+// 关闭编辑框
+cancelButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+// 点击模态框外部关闭
+window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
 });
 
 // 显示状态消息
