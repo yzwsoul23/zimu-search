@@ -28,6 +28,10 @@
         }
         .search-container {
             margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
         }
         input {
             padding: 12px;
@@ -143,6 +147,18 @@
                 padding: 15px;
             }
         }
+        .select-filter {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            min-width: 150px;
+        }
+        @media screen and (max-width: 600px) {
+            .select-filter {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -164,6 +180,9 @@
     <div id="statusMessage"></div>
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="输入拼音或汉字搜索...">
+        <select id="schoolFilter" class="select-filter">
+            <option value="">所有学校</option>
+        </select>
     </div>
     <table>
         <thead>
