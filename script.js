@@ -45,6 +45,7 @@ async function initDatabase() {
 async function loadStoredPeople() {
     try {
         people = await db.getAllPeople();
+        updateSchoolFilter();
         renderPeople(people);
     } catch (error) {
         showStatus('加载数据失败：' + error.message, 'error');
@@ -62,7 +63,7 @@ const csvEditor = document.getElementById('csvEditor');
 editButton.addEventListener('click', () => {
     // 将现有数据加载到编辑框
     const csvContent = people.map(p => 
-        `${p.name},${p.department},${p.position}`
+        `${p.name},${p.department},${p.position},${p.school}`
     ).join('\n');
     csvEditor.value = csvContent;
     modal.style.display = 'block';
@@ -76,13 +77,14 @@ saveButton.addEventListener('click', async () => {
         const newPeople = rows
             .filter(row => row.trim()) // 过滤空行
             .map(row => {
-                const [name, department, position] = row.split(',').map(cell => cell.trim());
-                return { name, department, position };
+                const [name, department, position, school] = row.split(',').map(cell => cell.trim());
+                return { name, department, position, school };
             });
 
         // 保存到数据库
         await db.addPeople(newPeople);
         people = newPeople;
+        updateSchoolFilter();
         renderPeople(people);
         showStatus('数据保存成功！', 'success');
         modal.style.display = 'none';
@@ -114,20 +116,53 @@ function showStatus(message, type) {
     }, 3000);
 }
 
-// 搜索功能
+// 添加学校筛选功能
+function updateSchoolFilter() {
+    const schoolSelect = document.getElementById('schoolFilter');
+    const schools = [...new Set(people.map(p => p.school))].filter(Boolean).sort();
+    
+    schoolSelect.innerHTML = '<option value="">所有学校</option>';
+    schools.forEach(school => {
+        const option = document.createElement('option');
+        option.value = school;
+        option.textContent = school;
+        schoolSelect.appendChild(option);
+    });
+}
+
+// 添加学校筛选事件监听
+document.getElementById('schoolFilter').addEventListener('change', (e) => {
+    const selectedSchool = e.target.value;
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    
+    filterAndRenderPeople(searchText, selectedSchool);
+});
+
+// 更新搜索功能，结合学校筛选
 document.getElementById('searchInput').addEventListener('input', (e) => {
     const searchText = e.target.value.toLowerCase();
+    const selectedSchool = document.getElementById('schoolFilter').value;
+    
+    filterAndRenderPeople(searchText, selectedSchool);
+});
+
+// 组合筛选函数
+function filterAndRenderPeople(searchText, selectedSchool) {
     const filtered = people.filter(person => {
         const namePinyin = pinyinPro.pinyin(person.name, { toneType: 'none' }).toLowerCase();
         const nameFirst = pinyinPro.pinyin(person.name, { pattern: 'first', toneType: 'none' }).toLowerCase();
         
-        return person.name.includes(searchText) || // 匹配汉字
-               namePinyin.includes(searchText) || // 匹配完整拼音
-               nameFirst.includes(searchText);    // 匹配拼音首字母
+        const matchesSearch = person.name.includes(searchText) || 
+                            namePinyin.includes(searchText) || 
+                            nameFirst.includes(searchText);
+                            
+        const matchesSchool = !selectedSchool || person.school === selectedSchool;
+        
+        return matchesSearch && matchesSchool;
     });
     
     renderPeople(filtered);
-});
+}
 
 // 清空数据
 document.getElementById('clearButton').addEventListener('click', async () => {
