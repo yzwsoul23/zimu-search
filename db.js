@@ -22,6 +22,7 @@ class PersonDB {
                     const store = db.createObjectStore(this.storeName, { keyPath: 'id', autoIncrement: true });
                     store.createIndex('name', 'name', { unique: false });
                     store.createIndex('department', 'department', { unique: false });
+                    store.createIndex('school', 'school', { unique: false });
                 }
             };
         });
