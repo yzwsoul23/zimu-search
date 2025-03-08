@@ -19,7 +19,7 @@ function renderPeople(peopleToShow) {
         `;
         // 修改点击复制的内容
         row.addEventListener('click', () => {
-            const textToCopy = `${person.name} ${person.school}`;
+            const textToCopy = `${person.name} `;
             navigator.clipboard.writeText(textToCopy)
                 .then(() => {
                     showStatus('已复制：' + textToCopy, 'success');
