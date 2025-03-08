@@ -15,12 +15,11 @@ function renderPeople(peopleToShow) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${person.name}</td>
-            <td>${person.department}</td>
-            <td>${person.position}</td>
+            <td>${person.school}</td>
         `;
-        // 添加点击事件
+        // 修改点击复制的内容
         row.addEventListener('click', () => {
-            const textToCopy = `${person.name} ${person.department}`;
+            const textToCopy = `${person.name} ${person.school}`;
             navigator.clipboard.writeText(textToCopy)
                 .then(() => {
                     showStatus('已复制：' + textToCopy, 'success');
@@ -61,9 +60,8 @@ const csvEditor = document.getElementById('csvEditor');
 
 // 打开编辑框
 editButton.addEventListener('click', () => {
-    // 将现有数据加载到编辑框
     const csvContent = people.map(p => 
-        `${p.name},${p.department},${p.position},${p.school}`
+        `${p.name},${p.school}`
     ).join('\n');
     csvEditor.value = csvContent;
     modal.style.display = 'block';
@@ -77,8 +75,8 @@ saveButton.addEventListener('click', async () => {
         const newPeople = rows
             .filter(row => row.trim()) // 过滤空行
             .map(row => {
-                const [name, department, position, school] = row.split(',').map(cell => cell.trim());
-                return { name, department, position, school };
+                const [name, school] = row.split(',').map(cell => cell.trim());
+                return { name, school };
             });
 
         // 保存到数据库
