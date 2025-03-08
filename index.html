@@ -169,8 +169,8 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <h3>编辑数据表</h3>
-            <p class="hint">请按照 "姓名,部门,职位" 格式编辑，每行一条数据</p>
-            <textarea id="csvEditor" rows="10" placeholder="张三,技术部,工程师&#10;李四,市场部,经理"></textarea>
+            <p class="hint">请按照 "姓名,学校" 格式编辑，每行一条数据</p>
+            <textarea id="csvEditor" rows="10" placeholder="张三,清华大学&#10;李四,北京大学"></textarea>
             <div class="modal-buttons">
                 <button class="button" id="saveButton">保存</button>
                 <button class="button button-cancel" id="cancelButton">取消</button>
@@ -188,8 +188,7 @@
         <thead>
             <tr>
                 <th>姓名</th>
-                <th>部门</th>
-                <th>职位</th>
+                <th>学校</th>
             </tr>
         </thead>
         <tbody id="peopleList">
